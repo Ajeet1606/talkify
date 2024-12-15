@@ -1,14 +1,16 @@
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-dotenv.config();
+require("dotenv").config();
 
-const app = express();
-const port = process.env.PORT;
+const PORT = process.env.PORT || 3000;
+const { Server } = require("socket.io");
 
-app.get('/', (req:Request, res:Response) => {
-  res.send('Express + TypeScript Server');
+const io = new Server(PORT, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+io.on("connection", (socket: any) => {
+  console.log(`User Connected: ${socket.id}`);
 });
+
